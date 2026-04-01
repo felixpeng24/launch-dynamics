@@ -92,8 +92,24 @@ st.markdown("""
 
     /* Hide chrome but keep sidebar toggle */
     #MainMenu, footer { visibility: hidden; }
-    [data-testid="stHeader"] { background: transparent !important; }
     [data-testid="stToolbar"] { display: none !important; }
+
+    /* Sidebar toggle button */
+    [data-testid="stSidebarCollapsedControl"] {
+        visibility: visible !important;
+        display: block !important;
+        color: #FFFFFF !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] button {
+        color: #FFFFFF !important;
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 0 !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] svg {
+        fill: #FFFFFF !important;
+        stroke: #FFFFFF !important;
+    }
 
     /* ── Typography ── */
     h1 {
