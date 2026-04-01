@@ -27,7 +27,7 @@ from landing_sim import ai_analyst
 # ── Page Config ──────────────────────────────────────────────
 st.set_page_config(
     page_title="Starship Landing Dynamics",
-    page_icon="https://upload.wikimedia.org/wikipedia/commons/3/36/SpaceX-Logo-Xonly.svg",
+    page_icon="S",
     layout="wide",
     initial_sidebar_state="expanded",
 )
