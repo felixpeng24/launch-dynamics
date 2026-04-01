@@ -29,7 +29,7 @@ st.set_page_config(
     page_title="Starship Landing Dynamics",
     page_icon="S",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # ── Design System ────────────────────────────────────────────
@@ -93,23 +93,6 @@ st.markdown("""
     /* Hide chrome but keep sidebar toggle */
     #MainMenu, footer { visibility: hidden; }
     [data-testid="stToolbar"] { display: none !important; }
-
-    /* Sidebar toggle button */
-    [data-testid="stSidebarCollapsedControl"] {
-        visibility: visible !important;
-        display: block !important;
-        color: #FFFFFF !important;
-    }
-    [data-testid="stSidebarCollapsedControl"] button {
-        color: #FFFFFF !important;
-        background: rgba(255,255,255,0.08) !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        border-radius: 0 !important;
-    }
-    [data-testid="stSidebarCollapsedControl"] svg {
-        fill: #FFFFFF !important;
-        stroke: #FFFFFF !important;
-    }
 
     /* ── Typography ── */
     h1 {
@@ -225,14 +208,8 @@ st.markdown("""
         padding: 8px 20px !important;
     }
 
-    /* ── Sidebar ── */
-    [data-testid="stSidebar"] {
-        background: #000000 !important;
-        border-right: 1px solid rgba(255,255,255,0.08) !important;
-    }
-    [data-testid="stSidebar"] [data-testid="stMarkdown"] h3 {
-        margin-top: 28px !important;
-    }
+    /* ── Sidebar (hidden) ── */
+    [data-testid="stSidebar"] { display: none !important; }
 
     /* ── Inputs ── */
     [data-testid="stNumberInput"] input,
@@ -392,53 +369,49 @@ st.markdown("")
 st.markdown("")
 
 
-# ── Sidebar ──────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown(
-        '<div style="padding:20px 0 8px 0;">'
-        '<span style="font-family:Barlow Condensed,sans-serif; font-size:1.1rem; '
-        'font-weight:600; text-transform:uppercase; letter-spacing:0.12em; '
-        'color:rgba(255,255,255,0.5);">Configuration</span>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown("---")
+# ── Configuration Panel ───────────────────────────────────────
+with st.expander("CONFIGURATION", expanded=False):
+    cfg1, cfg2, cfg3, cfg4 = st.columns(4)
 
-    st.markdown("### Vehicle")
-    mass = st.number_input("Dry Mass (kg)", value=config["vehicle"]["dry_mass"],
-                           step=1000.0, format="%.0f")
-    prop = st.number_input("Landing Propellant (kg)",
-                           value=config["vehicle"]["landing_propellant"],
-                           step=100.0, format="%.0f")
-    config["vehicle"]["dry_mass"] = mass
-    config["vehicle"]["landing_propellant"] = prop
+    with cfg1:
+        st.markdown("### Vehicle")
+        mass = st.number_input("Dry Mass (kg)", value=config["vehicle"]["dry_mass"],
+                               step=1000.0, format="%.0f")
+        prop = st.number_input("Landing Propellant (kg)",
+                               value=config["vehicle"]["landing_propellant"],
+                               step=100.0, format="%.0f")
+        config["vehicle"]["dry_mass"] = mass
+        config["vehicle"]["landing_propellant"] = prop
 
-    st.markdown("### Propulsion")
-    thrust_mode = st.selectbox("Thrust Mode", ["simple", "multi_engine"],
-                               format_func=lambda x: "Single Engine" if x == "simple"
-                               else "Multi-Engine")
-    config["thrust"]["mode"] = thrust_mode
-    max_thrust = st.number_input("Max Thrust / Engine (MN)",
-                                 value=config["thrust"]["simple"]["max_thrust"] / 1e6,
-                                 step=0.1, format="%.1f")
-    config["thrust"]["simple"]["max_thrust"] = max_thrust * 1e6
-    config["thrust"]["multi_engine"]["thrust_per_engine"] = max_thrust * 1e6
+    with cfg2:
+        st.markdown("### Propulsion")
+        thrust_mode = st.selectbox("Thrust Mode", ["simple", "multi_engine"],
+                                   format_func=lambda x: "Single Engine" if x == "simple"
+                                   else "Multi-Engine")
+        config["thrust"]["mode"] = thrust_mode
+        max_thrust = st.number_input("Max Thrust / Engine (MN)",
+                                     value=config["thrust"]["simple"]["max_thrust"] / 1e6,
+                                     step=0.1, format="%.1f")
+        config["thrust"]["simple"]["max_thrust"] = max_thrust * 1e6
+        config["thrust"]["multi_engine"]["thrust_per_engine"] = max_thrust * 1e6
 
-    st.markdown("### Contact")
-    stiffness_exp = st.slider("Stiffness (10^x N/m^n)", 6.0, 10.0,
-                              np.log10(config["contact"]["stiffness"]), 0.1)
-    config["contact"]["stiffness"] = 10 ** stiffness_exp
-    damping = st.number_input("Damping (N*s/m)", value=config["contact"]["damping"],
-                              step=50000.0, format="%.0f")
-    config["contact"]["damping"] = damping
+    with cfg3:
+        st.markdown("### Contact")
+        stiffness_exp = st.slider("Stiffness (10^x N/m^n)", 6.0, 10.0,
+                                  np.log10(config["contact"]["stiffness"]), 0.1)
+        config["contact"]["stiffness"] = 10 ** stiffness_exp
+        damping = st.number_input("Damping (N*s/m)", value=config["contact"]["damping"],
+                                  step=50000.0, format="%.0f")
+        config["contact"]["damping"] = damping
 
-    st.markdown("### Initial State")
-    ic_alt = st.number_input("Altitude (m)",
-                             value=config["initial_conditions"]["altitude"], step=10.0)
-    ic_vz = st.number_input("Descent Rate (m/s)",
-                            value=config["initial_conditions"]["vertical_velocity"], step=1.0)
-    config["initial_conditions"]["altitude"] = ic_alt
-    config["initial_conditions"]["vertical_velocity"] = ic_vz
+    with cfg4:
+        st.markdown("### Initial State")
+        ic_alt = st.number_input("Altitude (m)",
+                                 value=config["initial_conditions"]["altitude"], step=10.0)
+        ic_vz = st.number_input("Descent Rate (m/s)",
+                                value=config["initial_conditions"]["vertical_velocity"], step=1.0)
+        config["initial_conditions"]["altitude"] = ic_alt
+        config["initial_conditions"]["vertical_velocity"] = ic_vz
 
 
 # ── Tabs ─────────────────────────────────────────────────────
