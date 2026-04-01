@@ -1,6 +1,7 @@
 """Streamlit dashboard for interactive landing dynamics simulation."""
 
 import sys
+import base64
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -10,6 +11,13 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+
+# Load hero image as base64 for CSS embedding
+_ASSET_DIR = Path(__file__).parent / "assets"
+_HERO_B64 = ""
+_hero_path = _ASSET_DIR / "starship.jpg"
+if _hero_path.exists():
+    _HERO_B64 = base64.b64encode(_hero_path.read_bytes()).decode()
 
 from landing_sim.simulation import run_simulation, load_config
 from landing_sim.monte_carlo import run_monte_carlo
@@ -317,40 +325,93 @@ def spec_row(label, value):
             f'</div>')
 
 
-# ── Header ───────────────────────────────────────────────────
-st.markdown("")
-st.markdown("")
-col_title, col_sub = st.columns([2, 1])
-with col_title:
-    st.markdown("# STARSHIP")
-    st.markdown("# LANDING DYNAMICS")
-with col_sub:
-    st.markdown(
-        '<p style="color:rgba(255,255,255,0.5); font-size:0.85rem; '
-        'font-weight:300; line-height:1.7; padding-top:12px;">'
-        '3-DOF propulsive landing simulation with nonlinear contact dynamics '
-        'and Monte Carlo uncertainty quantification. '
-        'Vehicle parameters approximate Starship from publicly available data.'
-        '</p>',
-        unsafe_allow_html=True,
+# ── Hero Section ─────────────────────────────────────────────
+total_mass = config["vehicle"]["dry_mass"] + config["vehicle"]["landing_propellant"]
+
+hero_bg = ""
+if _HERO_B64:
+    hero_bg = (
+        f"background-image: "
+        f"linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.2) 100%), "
+        f"url('data:image/jpeg;base64,{_HERO_B64}');"
+        f"background-size: cover;"
+        f"background-position: right center;"
     )
 
-# Vehicle specs bar
+st.markdown(f"""
+<div style="
+    {hero_bg}
+    margin: -1rem -1rem 0 -1rem;
+    padding: 80px 60px 60px 60px;
+    min-height: 520px;
+    display: flex;
+    align-items: flex-end;
+">
+    <div style="max-width: 560px;">
+        <p style="
+            font-family: 'Barlow', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 12px;
+        ">Landing Dynamics Simulation</p>
+
+        <h1 style="
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 4.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 0.95;
+            margin: 0 0 32px 0;
+            color: #FFFFFF;
+        ">STARSHIP</h1>
+
+        <p style="
+            color: rgba(255,255,255,0.55);
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.75;
+            margin-bottom: 40px;
+            max-width: 440px;
+        ">3-DOF propulsive landing with nonlinear contact dynamics
+        and Monte Carlo uncertainty quantification. Vehicle parameters
+        approximate Starship from publicly available data.</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0;">
+            <div style="border-top:1px solid rgba(255,255,255,0.12); padding:14px 24px 14px 0;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Height</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">{config["vehicle"]["height"]:.0f} m</div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.12); padding:14px 0 14px 24px;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Diameter</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">{config["vehicle"]["diameter"]:.0f} m</div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.12); padding:14px 24px 14px 0;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Mass</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">{total_mass/1000:.0f} t</div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.12); padding:14px 0 14px 24px;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Thrust</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">{config["thrust"]["simple"]["max_thrust"]/1e6:.1f} MN</div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.12); border-bottom:1px solid rgba(255,255,255,0.12); padding:14px 24px 14px 0;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Landing Legs</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">{len(config["vehicle"]["legs"])}</div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.12); border-bottom:1px solid rgba(255,255,255,0.12); padding:14px 0 14px 24px;">
+                <div style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(255,255,255,0.35); margin-bottom:4px;">Degrees of Freedom</div>
+                <div style="font-size:1.1rem; font-weight:300; color:#FFF;">3</div>
+            </div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("")
-specs_html = '<div style="margin: 8px 0 40px 0;">'
-total_mass = config["vehicle"]["dry_mass"] + config["vehicle"]["landing_propellant"]
-specs = [
-    ("Height", f'{config["vehicle"]["height"]:.0f} m'),
-    ("Diameter", f'{config["vehicle"]["diameter"]:.0f} m'),
-    ("Mass", f'{total_mass/1000:.0f} t'),
-    ("Thrust", f'{config["thrust"]["simple"]["max_thrust"]/1e6:.1f} MN'),
-    ("Legs", f'{len(config["vehicle"]["legs"])}'),
-    ("DOF", "3"),
-]
-for label, value in specs:
-    specs_html += spec_row(label, value)
-specs_html += '</div>'
-st.markdown(specs_html, unsafe_allow_html=True)
+st.markdown("")
 
 
 # ── Sidebar ──────────────────────────────────────────────────
