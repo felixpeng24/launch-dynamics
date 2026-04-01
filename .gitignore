@@ -1,0 +1,46 @@
+# Claude
+.claude/
+CLAUDE.md
+
+# Interview prep
+interview-prep/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Results / generated outputs
+results/
+*.mp4
+*.gif
+
+# Environment
+.env
+.env.local
+.env.production
