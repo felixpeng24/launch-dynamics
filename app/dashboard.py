@@ -90,8 +90,8 @@ st.markdown("""
     }
     * { font-family: 'Barlow', sans-serif !important; }
 
-    /* Hide chrome */
-    #MainMenu, footer, header { visibility: hidden; }
+    /* Hide chrome but keep sidebar toggle */
+    #MainMenu, footer { visibility: hidden; }
     [data-testid="stHeader"] { background: transparent !important; }
     [data-testid="stToolbar"] { display: none !important; }
 
