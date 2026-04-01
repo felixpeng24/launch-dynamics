@@ -260,6 +260,9 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.08) !important;
         border-radius: 0 !important;
     }
+    [data-testid="stExpander"] svg {
+        display: none !important;
+    }
 
     /* ── Code blocks ── */
     .stCodeBlock {
