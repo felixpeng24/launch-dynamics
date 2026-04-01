@@ -373,7 +373,8 @@ st.markdown("")
 
 
 # ── Configuration Panel ───────────────────────────────────────
-with st.expander("CONFIGURATION", expanded=False):
+show_config = st.toggle("CONFIGURATION", value=False)
+if show_config:
     cfg1, cfg2, cfg3, cfg4 = st.columns(4)
 
     with cfg1:
