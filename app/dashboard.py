@@ -27,7 +27,7 @@ from landing_sim import ai_analyst
 # ── Page Config ──────────────────────────────────────────────
 st.set_page_config(
     page_title="Starship Landing Dynamics",
-    page_icon="S",
+    page_icon=str(Path(__file__).parent / "assets" / "starship.jpg"),
     layout="wide",
     initial_sidebar_state="collapsed",
 )
