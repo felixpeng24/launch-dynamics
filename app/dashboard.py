@@ -345,25 +345,17 @@ _cell_tr = "border-top:1px solid rgba(255,255,255,0.12); padding:14px 0 14px 24p
 _cell_tb = "border-top:1px solid rgba(255,255,255,0.12); border-bottom:1px solid rgba(255,255,255,0.12); padding:14px 24px 14px 0;"
 _cell_tbr = "border-top:1px solid rgba(255,255,255,0.12); border-bottom:1px solid rgba(255,255,255,0.12); padding:14px 0 14px 24px;"
 
-_height = f'{config["vehicle"]["height"]:.0f}'
-_diam = f'{config["vehicle"]["diameter"]:.0f}'
-_mass_t = f'{total_mass/1000:.0f}'
-_thrust_mn = f'{config["thrust"]["simple"]["max_thrust"]/1e6:.1f}'
-_n_legs = f'{len(config["vehicle"]["legs"])}'
-
 st.markdown(
     f'<div style="{_hero_style}">'
     f'<div style="max-width:560px;">'
     f'<p style="font-family:Barlow,sans-serif; font-weight:500; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(255,255,255,0.4); margin-bottom:12px;">Landing Dynamics Simulation</p>'
     f'<h1 style="font-family:Barlow Condensed,sans-serif; font-weight:700; font-size:4.5rem; text-transform:uppercase; letter-spacing:0.02em; line-height:0.95; margin:0 0 32px 0; color:#FFFFFF;">STARSHIP</h1>'
     f'<p style="color:rgba(255,255,255,0.55); font-size:0.9rem; font-weight:300; line-height:1.75; margin-bottom:40px; max-width:440px;">3-DOF propulsive landing with nonlinear contact dynamics and Monte Carlo uncertainty quantification. Vehicle parameters approximate Starship from publicly available data.</p>'
-    f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:0;">'
-    f'<div style="{_cell_t}"><div style="{_lbl}">Height</div><div style="{_val}">{_height} m</div></div>'
-    f'<div style="{_cell_tr}"><div style="{_lbl}">Diameter</div><div style="{_val}">{_diam} m</div></div>'
-    f'<div style="{_cell_t}"><div style="{_lbl}">Mass</div><div style="{_val}">{_mass_t} t</div></div>'
-    f'<div style="{_cell_tr}"><div style="{_lbl}">Thrust</div><div style="{_val}">{_thrust_mn} MN</div></div>'
-    f'<div style="{_cell_tb}"><div style="{_lbl}">Landing Legs</div><div style="{_val}">{_n_legs}</div></div>'
-    f'<div style="{_cell_tbr}"><div style="{_lbl}">Degrees of Freedom</div><div style="{_val}">3</div></div>'
+    f'<div>'
+    f'<div style="{_cell_t}"><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="{_lbl}">Height</span><span style="{_val}">123m / 403 ft</span></div></div>'
+    f'<div style="{_cell_t}"><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="{_lbl}">Diameter</span><span style="{_val}">9 m / 29.5 ft</span></div></div>'
+    f'<div style="{_cell_t}"><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="{_lbl}">Payload Capacity</span><span style="{_val}">100 - 150 t (fully reusable)</span></div></div>'
+    f'<div style="{_cell_tb}"><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="{_lbl}">Thrust</span><span style="{_val}">74.4 MN / 16.7 Mlbf</span></div></div>'
     f'</div></div></div>',
     unsafe_allow_html=True,
 )
